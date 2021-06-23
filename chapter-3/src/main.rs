@@ -4,6 +4,7 @@ fn main() {
     vars();
     types();
     get_ar_value();
+    loops();
 }
 
 /**
@@ -98,5 +99,49 @@ fn get_ar_value() {
             println!("Char: {}", ar[index]);
             break;
         }
+    }
+}
+
+/**
+ * Loops, while, for
+ */
+fn loops() {
+    // endless loop
+    let mut n = 0;
+    loop {
+        if n >= 5 {
+            println!("n === {}", n);
+            break;
+        }
+
+        n += 1;
+    }
+
+    // return value from loop
+    let result = loop {
+        if n >= 10 {
+            break n;
+        }
+        n += 1;
+    };
+
+    println!("Loop returned new n value = {}", result);
+
+    // while
+    while n < 15 {
+        n += 1;
+    }
+
+    println!("n value after while = {}", n);
+
+    // loop through collection
+    let col = [10, 20, 30, 40];
+    for el in col.iter() {
+        println!("el = {}", el);
+    }
+
+    // using range
+    for i in 0..10 {
+        println!("range: {}", i);
     }
 }
