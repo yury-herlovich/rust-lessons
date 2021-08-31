@@ -1,22 +1,19 @@
 #[derive(Debug)]
-struct Rectangle {
-    width: u32,
-    height: u32,
+pub struct Rectangle {
+    pub width: u32,
+    pub height: u32,
 }
 
 impl Rectangle {
-    #[allow(dead_code)]
-    fn area(&self) -> u32 {
+    pub fn area(&self) -> u32 {
         self.width * self.height
     }
 
-    #[allow(dead_code)]
-    fn is_square(&self) -> bool {
+    pub fn is_square(&self) -> bool {
         self.width == self.height
     }
 
-    #[allow(dead_code)]
-    fn longest_side(&self) -> Result<u32, String> {
+    pub fn longest_side(&self) -> Result<u32, String> {
         if self.is_square() {
             Err(String::from("Rectangle is square"))
         } else {
@@ -38,10 +35,11 @@ mod tests {
         assert_eq!(2 + 2, 4);
     }
 
-    // #[test]
-    // fn failed_test() {
-    //     assert_eq!(2 + 2, 2);
-    // }
+    #[test]
+    #[should_panic]
+    fn failed_test() {
+        assert_eq!(2 + 2, 2);
+    }
 
     #[test]
     fn should_calculate_area() {
