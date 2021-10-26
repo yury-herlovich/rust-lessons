@@ -1,6 +1,8 @@
 use std::io::prelude::*;
 use std::net::TcpListener;
 use std::net::TcpStream;
+use std::thread;
+use std::time::Duration;
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
@@ -8,7 +10,10 @@ fn main() {
     for stream in listener.incoming() {
         let stream = stream.unwrap();
 
-        handle_connection(stream);
+        thread::spawn(|| {
+            thread::sleep(Duration::from_secs(5));
+            handle_connection(stream);
+        });
     }
 }
 
