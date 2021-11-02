@@ -1,6 +1,7 @@
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use actix_web::middleware::{NormalizePath, normalize};
-pub mod users;
+mod users;
+use mongodb::{Client};
 
 async fn hello() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
@@ -8,8 +9,11 @@ async fn hello() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
+    let client = Client::with_uri_str("mongodb://localhost:27000").await.expect("failed to connect");
+
+    HttpServer::new(move || {
         App::new()
+            .app_data(web::Data::new(client.clone()))
             .wrap(NormalizePath::new(normalize::TrailingSlash::Trim))
             .route("/", web::get().to(hello))
             .service(
