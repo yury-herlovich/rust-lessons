@@ -1,7 +1,9 @@
 pub mod handler;
+use serde::{Deserialize, Serialize};
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct User {
-    pub id: Option<String>,
-    pub name: Option<String>,
-    pub role: Option<String>,
+    pub id: String,
+    pub name: String,
+    pub role: String,
 }

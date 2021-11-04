@@ -2,7 +2,7 @@
 
 #### Start web server
 - `cargo run` - starts app
-- `docker run --rm -p 27000:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=password -e MONGO_INITDB_DATABASE=actixdb -d mongo:latest` - starts mongoDb
+- `docker run --rm -p 27000:27017 -e MONGO_INITDB_DATABASE=actixdb -d mongo:latest` - starts mongoDb (`... -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=password...` to add authentication)
 
 #### Endpoints:
 - `GET /` - hello world (`curl localhost:8080`)
