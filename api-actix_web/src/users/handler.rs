@@ -1,31 +1,14 @@
 use actix_web::{web, HttpResponse, Responder};
-use mongodb::{bson::doc, bson::oid::ObjectId, Database};
-use futures::StreamExt;
+use mongodb::{bson::oid::ObjectId, Database};
 use super::*;
 
 pub async fn all(database: web::Data<Database>) -> impl Responder {
     println!("GET /users");
-    let collection = database.collection::<User>("users");
 
-    let _result = match collection.find(doc! {}, None).await {
-        Ok(mut cursor) => {
-            let mut result: Vec<User> = Vec::new();
-            while let Some(_doc) = cursor.next().await {
-                result.push(User {
-                    id: Some(ObjectId::new()),
-                    name: String::from("user"),
-                    role: Some(String::from("admin")),
-                })
-            }
-            result
-        },
-        Err(err) => {
-            println!("unsuccessful mongo response, {}", err);
-            vec![]
-        },
-    };
-
-    HttpResponse::Ok().body("Get list of users")
+    match model::all(&database).await {
+        Ok(res) => HttpResponse::Ok().json(res),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
 }
 
 pub async fn add(database: web::Data<Database>, data: web::Json<User>) -> impl Responder {

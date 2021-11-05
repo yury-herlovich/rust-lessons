@@ -1,5 +1,6 @@
 use crate::users::{User, InsertableUser};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database, error::Error};
+use futures::StreamExt;
 
 const COLLECTION: &str = "users";
 
@@ -17,4 +18,20 @@ pub async fn get(id: ObjectId, database: &Database) -> Result<Option<User>, Erro
     let collection = database.collection::<User>(COLLECTION);
 
     collection.find_one(doc! { "_id": id }, None).await
+}
+
+pub async fn all(database: &Database) -> Result<Vec<User>, Error> {
+    let collection = database.collection::<User>(COLLECTION);
+
+    match collection.find(doc! {}, None).await {
+        Ok(mut cursor) => {
+            let mut result: Vec<User> = Vec::new();
+            while let Some(doc) = cursor.next().await {
+                result.push(doc.unwrap())
+            }
+
+            Ok(result)
+        },
+        Err(err) => Err(err),
+    }
 }
