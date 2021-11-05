@@ -37,13 +37,37 @@ pub async fn get(id: web::Path<(String,)>, database: web::Data<Database>) -> imp
     }
 }
 
-pub async fn replace(id: web::Path<(u32,)>) -> impl Responder {
-    HttpResponse::Ok().json(format!("Replaces user by ID: {}", id.into_inner().0))
+pub async fn replace(
+    id: web::Path<(String,)>,
+    data: web::Json<User>,
+    database: web::Data<Database>
+) -> impl Responder {
+    println!("PUT /users/{}", id.as_ref().0);
+    let object_id = ObjectId::parse_str(id.into_inner().0).unwrap();
+
+    match model::update(object_id, data.into_inner(), &database).await {
+        Ok(Some(user)) => HttpResponse::Ok().json(user),
+        Ok(None) => HttpResponse::NotFound().json(format!("No user found with id {}", object_id)),
+        Err(err) => HttpResponse::InternalServerError().json(err.to_string()),
+    }
 }
 
-pub async fn update(id: web::Path<(u32,)>) -> impl Responder {
-    HttpResponse::Ok().json(format!("Updates user by ID: {}", id.into_inner().0))
+// TODO: PATCH is tricky, currently it's PATCH == PUT
+pub async fn update(
+    id: web::Path<(String,)>,
+    data: web::Json<User>,
+    database: web::Data<Database>
+) -> impl Responder {
+    println!("PATCH /users/{}", id.as_ref().0);
+    let object_id = ObjectId::parse_str(id.into_inner().0).unwrap();
+
+    match model::update(object_id, data.into_inner(), &database).await {
+        Ok(Some(user)) => HttpResponse::Ok().json(user),
+        Ok(None) => HttpResponse::NotFound().json(format!("No user found with id {}", object_id)),
+        Err(err) => HttpResponse::InternalServerError().json(err.to_string()),
+    }
 }
+
 
 pub async fn delete(id: web::Path<(String,)>, database: web::Data<Database>) -> impl Responder {
     println!("DELETE /users/{}", id.as_ref().0);

@@ -1,5 +1,6 @@
+use mongodb::options::FindOneAndUpdateOptions;
 use crate::users::{User, InsertableUser};
-use mongodb::{bson::doc, bson::oid::ObjectId, Database, error::Error, results};
+use mongodb::{bson, bson::doc, bson::oid::ObjectId, Database, error::Error, results};
 use futures::StreamExt;
 
 const COLLECTION: &str = "users";
@@ -40,4 +41,18 @@ pub async fn delete(id: ObjectId, database: &Database) -> Result<results::Delete
     let collection = database.collection::<User>(COLLECTION);
 
     collection.delete_one(doc! {"_id": id}, None).await
+}
+
+pub async fn update(id: ObjectId, user: User, database: &Database) -> Result<Option<User>, Error> {
+    let collection = database.collection::<User>(COLLECTION);
+    let data = InsertableUser::from_user(user);
+
+    let filter = doc!{ "_id": id };
+    let update = doc!{ "$set": bson::to_bson(&data).unwrap() };
+    let opt = FindOneAndUpdateOptions::builder()
+        .upsert(Some(false))
+        .return_document(Some(mongodb::options::ReturnDocument::After))
+        .build();
+
+    collection.find_one_and_update(filter, update, opt).await
 }
