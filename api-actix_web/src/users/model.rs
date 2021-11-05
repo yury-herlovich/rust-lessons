@@ -1,5 +1,5 @@
 use crate::users::{User, InsertableUser};
-use mongodb::{bson::doc, bson::oid::ObjectId, Database, error::Error};
+use mongodb::{bson::doc, bson::oid::ObjectId, Database, error::Error, results};
 use futures::StreamExt;
 
 const COLLECTION: &str = "users";
@@ -34,4 +34,10 @@ pub async fn all(database: &Database) -> Result<Vec<User>, Error> {
         },
         Err(err) => Err(err),
     }
+}
+
+pub async fn delete(id: ObjectId, database: &Database) -> Result<results::DeleteResult, Error> {
+    let collection = database.collection::<User>(COLLECTION);
+
+    collection.delete_one(doc! {"_id": id}, None).await
 }
