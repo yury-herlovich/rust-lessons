@@ -7,11 +7,11 @@
 #### Endpoints:
 - `GET /` - hello world (`curl localhost:8080`)
 - `GET /users` - get list of all users (`curl localhost:8080/users`)
-- `POST /users` - add new user (`curl -X POST localhost:8080/users`)
-- `GET /users/{id}` - get user by id (`curl localhost:8080/users/1`)
-- `PATCH /users/{id}` - update user (`curl -X PATCH localhost:8080/users/1`)
-- `PUT /users/{id}` - replace user (`curl -X PUT localhost:8080/users/1`)
-- `DELETE /users/{id}` - delete user (`curl -X DELETE localhost:8080/users/1`)
+- `POST /users` - add new user (`curl -X POST localhost:8080/users/6184259364fd1b6a3ce45270 -d "{\"name\":\"new name\", \"role\":\"user\"}" -H "Content-Type: application/json"`)
+- `GET /users/{id}` - get user by id (`curl localhost:8080/users/6184259364fd1b6a3ce45270`)
+- `PATCH /users/{id}` - update user, not really a PATCH request, it replaces full db record for now (`curl -X PATCH localhost:8080/users/6184259364fd1b6a3ce45270 -d "{\"name\":\"new name\", \"role\":\"user\"}" -H "Content-Type: application/json"`)
+- `PUT /users/{id}` - replace user (`curl -X PUT localhost:8080/users/6184259364fd1b6a3ce45270 -d "{\"name\":\"new name\", \"role\":\"user\"}" -H "Content-Type: application/json"`)
+- `DELETE /users/{id}` - delete user (`curl -X DELETE localhost:8080/users/6184259364fd1b6a3ce45270`)
 
 #### Links
 - [actix_web](https://actix.rs/docs)
